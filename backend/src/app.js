@@ -14,8 +14,8 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(helmet());
 
-app.use('/api/users', routes.user);
-app.use('/api/tasks', routes.task);
+app.use('/api/v1/users', routes.user);
+app.use('/api/v1/tasks', routes.task);
 
 app.get('/api', async (req, res) => {
   return res.status(200).send('Todoly API');
