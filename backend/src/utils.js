@@ -25,7 +25,7 @@ module.exports.hashText = async (text) => {
   return hashedText;
 };
 
-module.exports.compare = async (text, hashedText) => {
+module.exports.compareHashes = async (text, hashedText) => {
   return await bcrypt.compare(text, hashedText);
 };
 
