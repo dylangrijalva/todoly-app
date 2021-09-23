@@ -6,97 +6,97 @@ const verifyJwt = require('../middlewares/verifyJwt');
 const db = new PrismaClient();
 
 router.get('/', (req, res) => {
-	return res.status(200).send('Users Endpoint🤓!');
+  return res.status(200).send('Users Endpoint🤓!');
 });
 
 router.post('/sign_up', async (req, res) => {
-	if (!req.body.email || req.body.email === '')
-		return res.status(400).json({
-			status: 400,
-			message: 'Email address cannot be null or empty',
-		});
+  if (!req.body.email || req.body.email === '')
+    return res.status(400).json({
+      status: 400,
+      message: 'Email address cannot be null or empty',
+    });
 
-	if (!req.body.password || req.body.password === '')
-		return res.status(400).json({
-			status: 400,
-			message: 'Password cannot be null or empty',
-		});
+  if (!req.body.password || req.body.password === '')
+    return res.status(400).json({
+      status: 400,
+      message: 'Password cannot be null or empty',
+    });
 
-	const { email, password } = req.body;
+  const { email, password } = req.body;
 
-	const existingUser = await db.user.findFirst({
-		where: { email: email },
-	});
+  const existingUser = await db.user.findFirst({
+    where: { email: email },
+  });
 
-	if (existingUser)
-		return res.status(409).json({
-			status: 409,
-			message: 'The email is already taken',
-		});
+  if (existingUser)
+    return res.status(409).json({
+      status: 409,
+      message: 'The email is already taken',
+    });
 
-	const hashedPassword = await hashText(password);
+  const hashedPassword = await hashText(password);
 
-	const newUser = await db.user.create({
-		data: {
-			id: generateId(),
-			email: email,
-			password: hashedPassword,
-		},
-	});
+  const newUser = await db.user.create({
+    data: {
+      id: generateId(),
+      email: email,
+      password: hashedPassword,
+    },
+  });
 
-	return res.status(201).json(newUser);
+  return res.status(201).json(newUser);
 });
 
 router.post('/sign_in', async (req, res) => {
-	if (!req.body.email || req.body.email === '')
-		return res.status(400).json({
-			status: 400,
-			message: 'Email address cannot be null or empty',
-		});
+  if (!req.body.email || req.body.email === '')
+    return res.status(400).json({
+      status: 400,
+      message: 'Email address cannot be null or empty',
+    });
 
-	if (!req.body.password || req.body.password === '')
-		return res.status(400).json({
-			status: 400,
-			message: 'Password cannot be null or empty',
-		});
+  if (!req.body.password || req.body.password === '')
+    return res.status(400).json({
+      status: 400,
+      message: 'Password cannot be null or empty',
+    });
 
-	const { email, password } = req.body;
+  const { email, password } = req.body;
 
-	const existingUser = await db.user.findFirst({
-		where: { email: email },
-	});
+  const existingUser = await db.user.findFirst({
+    where: { email: email },
+  });
 
-	if (!existingUser)
-		return res.status(400).json({
-			status: 400,
-			message: 'The given password or email is not valid',
-		});
-    
-    const isValidPassword = await compare(password, existingUser.password);
+  if (!existingUser)
+    return res.status(400).json({
+      status: 400,
+      message: 'The given password or email is not valid',
+    });
 
-	if (!isValidPassword)
-		return res.status(400).json({
-			status: 400,
-			message: 'The given password or email is not valid',
-		});
+  const isValidPassword = await compare(password, existingUser.password);
 
-	const token = createToken(existingUser.id);
+  if (!isValidPassword)
+    return res.status(400).json({
+      status: 400,
+      message: 'The given password or email is not valid',
+    });
 
-	return res.status(200).json({
-		token: token
-	});
+  const token = createToken(existingUser.id);
+
+  return res.status(200).json({
+    token: token,
+  });
 });
 
 router.get('/me', verifyJwt);
 
 router.get('/me', async (req, res) => {
-    const { id } = req.payload;
+  const { id } = req.payload;
 
-    const user = await db.user.findFirst({
-        where: { id: id }
-    });
+  const user = await db.user.findFirst({
+    where: { id: id },
+  });
 
-    return res.status(200).json(user);
+  return res.status(200).json(user);
 });
 
 module.exports = router;

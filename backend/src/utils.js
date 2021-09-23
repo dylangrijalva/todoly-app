@@ -6,33 +6,33 @@ const bcrypt = require('bcryptjs');
 module.exports.generateId = () => nanoid(12);
 
 module.exports.createToken = (sub) =>
-	jwt.sign(
-		{
-			sub: sub,
-			iss: config.jwt.issuer,
-			aud: config.jwt.audience,
-		},
-		config.jwt.tokenSecret,
-		{
-			algorithm: 'HS256',
-			expiresIn: '15s',
-		}
-	);
+  jwt.sign(
+    {
+      sub: sub,
+      iss: config.jwt.issuer,
+      aud: config.jwt.audience,
+    },
+    config.jwt.tokenSecret,
+    {
+      algorithm: 'HS256',
+      expiresIn: '15s',
+    }
+  );
 
 module.exports.hashText = async (text) => {
-	const salt = await bcrypt.genSalt();
-	const hashedText = await bcrypt.hash(text, salt);
-	return hashedText;
+  const salt = await bcrypt.genSalt();
+  const hashedText = await bcrypt.hash(text, salt);
+  return hashedText;
 };
 
 module.exports.compare = async (text, hashedText) => {
-	return await bcrypt.compare(text, hashedText);
+  return await bcrypt.compare(text, hashedText);
 };
 
 module.exports.verifyJwt = (token) => {
-	try {
-		return jwt.verify(token, config.jwt.tokenSecret);
-	} catch {
-		return null;
-	}
+  try {
+    return jwt.verify(token, config.jwt.tokenSecret);
+  } catch {
+    return null;
+  }
 };
