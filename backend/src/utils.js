@@ -24,3 +24,15 @@ module.exports.hashText = async (text) => {
 	const hashedText = await bcrypt.hash(text, salt);
 	return hashedText;
 };
+
+module.exports.compare = async (text, hashedText) => {
+	return await bcrypt.compare(text, hashedText);
+};
+
+module.exports.verifyJwt = (token) => {
+	try {
+		return jwt.verify(token, config.jwt.tokenSecret);
+	} catch {
+		return null;
+	}
+};
