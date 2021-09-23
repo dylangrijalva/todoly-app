@@ -1,5 +1,10 @@
 const router = require('express').Router();
-const { createToken, generateId, hashText, compareHashes } = require('../utils');
+const {
+  createToken,
+  generateId,
+  hashText,
+  compareHashes,
+} = require('../utils');
 const { PrismaClient } = require('@prisma/client');
 const db = new PrismaClient();
 
@@ -26,17 +31,18 @@ router.post('/sign_up', async (req, res) => {
     where: { email: email },
   });
 
-  if (existingUser)
+  if (existingUser) {
     return res.status(409).json({
       status: 409,
       message: 'The email is already taken',
     });
+  }
 
   const hashedPassword = await hashText(password);
 
   const newUser = await db.user.create({
     data: {
-      id: generateId(),
+      id: await generateId(),
       email: email,
       password: hashedPassword,
     },
@@ -72,13 +78,14 @@ router.post('/sign_in', async (req, res) => {
 
   const isValidPassword = await compareHashes(password, existingUser.password);
 
-  if (!isValidPassword)
+  if (!isValidPassword) {
     return res.status(400).json({
       status: 400,
       message: 'The given password or email is not valid',
     });
+  }
 
-  const token = createToken(existingUser.id);
+  const token = await createToken(existingUser.id);
 
   return res.status(200).json({
     token: token,
