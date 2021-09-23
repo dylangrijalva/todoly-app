@@ -1,8 +1,6 @@
 const router = require('express').Router();
-const { createToken, generateId, hashText } = require('../utils');
+const { createToken, generateId, hashText, compareHashes } = require('../utils');
 const { PrismaClient } = require('@prisma/client');
-const { compare } = require('bcryptjs');
-const verifyJwt = require('../middlewares/verifyJwt');
 const db = new PrismaClient();
 
 router.get('/', (req, res) => {
@@ -72,7 +70,7 @@ router.post('/sign_in', async (req, res) => {
       message: 'The given password or email is not valid',
     });
 
-  const isValidPassword = await compare(password, existingUser.password);
+  const isValidPassword = await compareHashes(password, existingUser.password);
 
   if (!isValidPassword)
     return res.status(400).json({
@@ -85,18 +83,6 @@ router.post('/sign_in', async (req, res) => {
   return res.status(200).json({
     token: token,
   });
-});
-
-router.get('/me', verifyJwt);
-
-router.get('/me', async (req, res) => {
-  const { id } = req.payload;
-
-  const user = await db.user.findFirst({
-    where: { id: id },
-  });
-
-  return res.status(200).json(user);
 });
 
 module.exports = router;
