@@ -22,4 +22,4 @@ app.get('/api', async (req, res) => {
 
 app.listen(PORT, () => {
 	console.log(`Server up and running on http://localhost:${PORT}🚀`);
-});git
+});
