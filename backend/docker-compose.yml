@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  db:
+    container_name: db
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - todoly_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: guest
+      MYSQL_USER: guest
+      MYSQL_PASSWORD: guest
+      MYSQL_DATABASE: todoly
+    ports:
+      - 3306:3306
+    networks:
+      - app-tier
+  api:
+    build: ./
+    container_name: api
+    image: dagn/todoly
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    networks:
+      - app-tier
+volumes:
+  todoly_data: {}
+networks:
+  app-tier:
+    driver: bridge  
