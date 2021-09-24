@@ -6,6 +6,8 @@ const helmet = require('helmet');
 const routes = require('./routes');
 const { config } = require('./config');
 const verifyJwt = require('./middlewares/verifyJwt');
+const { PrismaClient } = require('@prisma/client');
+const db = new PrismaClient();
 
 const PORT = config.server.port;
 
