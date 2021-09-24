@@ -21,11 +21,11 @@
 Clone the project
 
 ```bash
-    git clone https://github.com/dylangrijalva/todoly-app
+git clone https://github.com/dylangrijalva/todoly-app
 ```
 
 Backend app:
 
 ```bash
-    cd backend/ && bash run.sh
+cd backend/ && bash run.sh
 ```
