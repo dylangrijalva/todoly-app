@@ -16,6 +16,7 @@ services:
     networks:
       - app-tier
   api:
+    restart: unless-stopped
     build: ./
     container_name: api
     image: dagn/todoly
