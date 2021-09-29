@@ -27,5 +27,5 @@ git clone https://github.com/dylangrijalva/todoly-app
 Backend app:
 
 ```bash
-cd backend/ && bash run.sh
+cd backend/ && ./run.sh
 ```
