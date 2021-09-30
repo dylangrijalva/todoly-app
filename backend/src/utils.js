@@ -10,8 +10,8 @@ const nanoid = customAlphabet(
 
 module.exports.generateId = async () => await nanoid();
 
-module.exports.createToken = sub =>
-  Promise.resolve(
+module.exports.createToken = sub => {
+  return Promise.resolve(
     jwt.sign(
       {
         sub: sub,
@@ -25,7 +25,8 @@ module.exports.createToken = sub =>
       }
     )
   );
-
+};
+  
 module.exports.hashText = async text => {
   const salt = await bcrypt.genSalt();
   const hashedText = await bcrypt.hash(text, salt);
