@@ -1,5 +1,5 @@
 if [ ! -f ".env" ]; then
-    echo 'Could not be able to start the app due .env file is missing'
+    echo '.env file is require to start the application'
 else
     docker-compose up
     docker exec -it api npx prisma migrate dev  
