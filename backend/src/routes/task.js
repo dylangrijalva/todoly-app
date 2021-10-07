@@ -52,7 +52,11 @@ router.post('/', async (req, res) => {
     },
   });
 
-  return res.status(201).json(newTask);
+  return res.status(201).json({
+    id: newTask.id,
+    content: newTask.content,
+    isCompleted: newTask.isCompleted
+  });
 });
 
 router.put('/:id', async (req, res) => {
